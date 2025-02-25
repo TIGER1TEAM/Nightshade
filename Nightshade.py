@@ -15,25 +15,22 @@ user_roles = []
 # Initialize client with intents
 client = discord.Client(intents=intents)
 
-TARGET_CHANNEL_IDS = [1126199842734080032, 1300875592979316756]
+ALL_CHANNEL_IDS = [1126199842734080032, 1300875592979316756, 1329585935373041745]
+
+GEN_CHANNEL_IDS = [1126199842734080032, 1300875592979316756]
+
+BOT_CHANNEL_IDS = [1329585935373041745]
 
 @client.event
 async def on_ready():
-    channel = client.get_channel(1329585935373041745)  # Example channel ID
-    if channel:
-        await channel.send('Nightshade: Online')
-        await channel.send('AP© 2025')
-        await channel.send('Built by: TIGER TEAM')
-        await channel.send('Powerd by: replit')
-        await channel.send('Use bot panel for info and tests')
-        await channel.send('SYSTEM: READY')
-        await channel.send('Use !bot for intro')
-        await channel.send('Use !cmd for commands')
-        await channel.send('Use !ngt for registration')
 
-print(f'Logged in as {client.user}')
-print("DEBUG: RUNNING")
-print("Actions listed below")
+    activity = discord.Game(name="Hi")
+    await client.change_presence(status=discord.Status.idle, activity=activity)
+
+    
+    print(f'Logged in as {client.user}')
+    print("DEBUG: RUNNING")
+    print("Actions listed below")
 
 @client.event
 async def on_message(message):
@@ -49,7 +46,7 @@ async def on_message(message):
     #    print(f"User {message.author.name} has roles: {user_roles}")
     
 
-    if message.channel.id == 1329585935373041745:
+    if message.channel.id == BOT_CHANNEL_IDS:
 
 
         if message.content == '!rcv':  # Check for the exact command
@@ -96,7 +93,7 @@ async def on_message(message):
             await message.channel.send('Use !rcv to see if I am still running.')
             await message.channel.send('Enjoy!')
 
-    elif message.channel.id in TARGET_CHANNEL_IDS:
+    elif message.channel.id in BOT_CHANNEL_IDS:
             if message.content == '$tst':  # Check for the exact command
                 await message.channel.send('RECEVE')
 
@@ -123,7 +120,17 @@ async def on_message(message):
                 await message.channel.send('Use !rcv to see if I am still running.')
                 await message.channel.send('Use the bot panel for more commands.')
 
-    else:
-        await message.channel.send("ERR")
+    elif message.channel.id in GEN_CHANNEL_IDS:
+        if any(word in message.content.lower() for word in ["fuck", "shit", "hell"]):
+            channel = BOT_CHANNEL_IDS
+            if channel:
+                await message.channel.send("ALERT!!")
+                await message.channel.send("Message sent from USER was flagged.")
+                await message.channel.send("Type !inv to put user under investigation.")
+            if message.content == '!inv':
+                await message.channel.send("UNDER INVESTIGATION")
+
+
+
 
 client.run(os.getenv('DISCORD_BOT_TOKEN'))
